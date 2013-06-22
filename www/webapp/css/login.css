@@ -1,0 +1,80 @@
+body
+{
+text-align: center;
+font-family: arial,sans-serif;
+color: #333333;
+}
+
+#login_table
+   {
+   padding: 15px;
+   width: 315px;
+   background: #87AFC7;
+   border: #909090 1px solid;
+   border-radius: 16px;
+   -webkit-box-shadow: 6px 9px 9px #303030;
+   -moz-box-shadow: 6px 9px 9px #303030;
+   border-spacing: 10;
+   height: 200px;
+   font-weight: bold;
+}
+
+#login_table_db
+   {
+   padding: 15px;
+   width: 315px;
+   background: #abb299;
+   border: #909090 1px solid;
+   border-radius: 16px;
+   -webkit-box-shadow: 6px 9px 9px #303030;
+   -moz-box-shadow: 6px 9px 9px #303030;
+   border-spacing: 10;
+   height: 200px;
+   font-weight: bold;
+}
+
+td {
+margin: 8px;
+
+}
+
+#intro
+{
+margin-top: 40px;
+width: 440;
+color: #222222;
+font-size: 15px;
+}
+
+.small_text
+{
+font-size: 12px;
+}
+
+.tfield
+{
+background: #eeeeee;
+-webkit-box-shadow: 3px 3px 4px #505050;
+-moz-box-shadow: 3px 3px 4px #505050;
+width: 120px;
+}
+
+.button
+{
+margin-top: 15px;
+height: 30px;
+width: 100px;
+background: #EEEEEE;
+border-radius: 5px;
+-webkit-box-shadow: 3px 5px 6px #303030;
+
+
+}
+
+.inline_bold
+{
+	display: inline;
+	font-weight: bold;
+
+	}
+}

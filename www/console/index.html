@@ -1,0 +1,84 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/console.css" />
+<script src="js/jquery-1.7.1.js"></script>
+<script src="js/util.js" > </script> 
+<!-- script src="http://code.jquery.com/jquery-latest.js"--></script>
+<title>Webapi console -- thanks to Sean and David!</title>
+</head>
+<body><div id="main_panel">
+<div class="title">Webapi Console</div>
+<form ACTION="/action/aaa" METHOD="POST" id="action_form" >
+
+Consumer key: <input id="consumer_key" name="consumer_key" value="42" />
+<br/>
+consumer Secret: <input id="consumer_secret" name="consumer_secret" value="OneRingToRuleThemAll" />
+<br/>
+URI: <input id="request_uri" name="request_uri" size="50" value="http://localhost:8080/stores/contacts/items/wei" />
+<br/>
+
+Operation: <br/>
+<select name="operation">
+<option>GET</option>
+<option>PUT</option>
+<option>HEAD</option>
+<option>DELETE</option>
+</select>
+<br/>
+Data: 
+<input name="data" value="Put data to update here." />
+<br/><br/>
+<input type="submit" value="Send" style="width:150px; color:green"/>
+<br/><br/><br/>
+Response:
+ <div id="resp_data"><table class='result'><tr><th>Field</th><th>Value</th></tr></table></div>
+</form>
+
+<script>
+
+$("#action_form").submit(function(event) {
+	/* stop form from submitting normally */
+	event.preventDefault();
+                         
+                         console.log("aaaa");
+	
+	/* get some values from elements on the page: */
+	var $form = $( this ),
+		consumer_key = $form.find( 'consumer_key' ).val(),
+		consumer_secret = $form.find( 'consumer_secret' ).val(),
+		request_uri = $form.find( 'request_uri' ).val(),
+		url = $form.attr('request_uri');
+                         console.log("===========");
+                         console.log(request_uri);
+                         $.get (url ),
+                         function (resutl) {
+                         alert(result);
+                         }
+	/* send the data using post and put the results in a div */
+	$.post( url, $("#action_form").serialize(),
+			function (result){
+			var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
+			for (var field in result)
+				{
+				
+				if (field == "data")
+					{
+					var text_height = 1;
+					if (result[field].length >50)
+						text_height = 20;
+					result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
+					}
+				else
+					result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
+				}
+			result_html += "</table>"
+			
+			$("#resp_data").empty().append(result_html);
+			}
+	);
+});
+</script>
+
+</div>
+</body>
+</html>

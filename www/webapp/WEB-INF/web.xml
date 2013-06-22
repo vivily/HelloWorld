@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+ 
+  <display-name>dataos-assetcatalog</display-name>
+  
+  <welcome-file-list>
+    <welcome-file>login.html</welcome-file>
+    <welcome-file>loginDB.html</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+    <description>Data Asset Catalog Web UI Servlet</description>
+    <display-name>DACUIServlet</display-name>
+    <servlet-name>DACUIServlet</servlet-name>
+    <servlet-class>com.nokia.dataos.dacui.DACUIServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>DACUIServlet</servlet-name>
+    <url-pattern>/DACUIServlet</url-pattern>
+  </servlet-mapping>
+    
+  <servlet-mapping>
+    <servlet-name>DACUIServlet</servlet-name>
+    <url-pattern>/authen</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>DACUIServlet</servlet-name>
+    <url-pattern>/logoutDC</url-pattern>
+  </servlet-mapping>
+  
+    
+    <servlet>
+    <description>Data Asset Catalog Web UI Servlet with DB backend</description>
+    <display-name>DACUIDBServlet</display-name>
+    <servlet-name>DACUIDBServlet</servlet-name>
+    <servlet-class>com.nokia.dataos.dacui.DACUIDBServlet</servlet-class>
+    </servlet>
+  
+   <servlet-mapping>
+    <servlet-name>DACUIDBServlet</servlet-name>
+    <url-pattern>/logoutDB</url-pattern>
+  </servlet-mapping>
+    
+  <servlet-mapping>
+    <servlet-name>DACUIDBServlet</servlet-name>
+    <url-pattern>/DACUIDBServlet</url-pattern>
+  </servlet-mapping>
+    
+  <servlet-mapping>
+    <servlet-name>DACUIDBServlet</servlet-name>
+    <url-pattern>/authenDB</url-pattern>
+  </servlet-mapping>
+
+</web-app>

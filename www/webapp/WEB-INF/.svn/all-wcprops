@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/4915/dataos/uniapi/branches/dataos-assetcatalog/src/main/webapp/WEB-INF
+END
+login.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/4768/dataos/uniapi/branches/dataos-assetcatalog/src/main/webapp/WEB-INF/login.jsp
+END
+loginDB.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/4768/dataos/uniapi/branches/dataos-assetcatalog/src/main/webapp/WEB-INF/loginDB.jsp
+END
+DAChome.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/4915/dataos/uniapi/branches/dataos-assetcatalog/src/main/webapp/WEB-INF/DAChome.jsp
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/4876/dataos/uniapi/branches/dataos-assetcatalog/src/main/webapp/WEB-INF/web.xml
+END

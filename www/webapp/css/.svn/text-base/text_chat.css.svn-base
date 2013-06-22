@@ -1,0 +1,81 @@
+
+#text_chat_area
+{
+	padding: 8px;
+	width: 315px;
+	background: #809090;
+	border: #404040 0px solid;
+	border-radius: 10px;
+	-webkit-box-shadow: 7px 7px 7px #303030;
+	-moz-box-shadow: 7px 7px 7px #303030;
+	float: left;
+	margin-right: 20px;
+}
+   
+
+#chat_panel
+{
+	width: 284px;
+	height: 330px;
+	border: 2px #707070 solid;
+	padding: 8px;
+	background: #fefefe;
+	font: 12px arial,sans-serif;
+	margin-top: 6px;
+	margin-left: 5px;
+	margin-right: 6px;
+	vertical-align:text-center;
+	overflow-y: auto; 
+}
+
+#enter_text_field
+{
+	width: 300px;
+	height: 30px;
+	border: 2px #707070 solid;
+	background: #eeffee;
+	font: 14px arial,sans-serif;
+	font-weight: bold;
+	margin-left: 5px;
+	margin-bottom: 6px;
+
+}
+
+.chat_entry
+{
+	margin-bottom: 6px;
+}
+.chat_content
+{
+	margin-left: 10px;
+	margin-top: 2px;
+	font-weight: bold;
+	font-size: 14px;
+	border: #348017 1px solid;
+	padding:	2px;
+	padding-left: 3px;
+	background: #eafbca; 
+	width: 240;
+	border-radius: 6px;
+	word-wrap:break-word;
+}
+
+.clipart
+{
+height: 30px;
+}
+
+#submit
+{
+position:absolute; 
+left: 250; 
+width:65px; 
+height: 20px; 
+padding:4px; 
+display:inline; 
+color: #333333; font-size:16px; 
+-webkit-box-shadow: 4px 4px 4px #333333; 
+background: #CCCCCC;
+border-radius: 5px;
+text-align: center;
+}

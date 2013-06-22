@@ -1,0 +1,286 @@
+function authenticate(username, password)
+{
+<<<<<<< .mine
+	//alert("Authenticate called, username: " + username + " password: " + password);
+=======
+	if (window.console) console.log("Authenticate called, username: " + username + " password: " + password);
+>>>>>>> .r4439
+	if (validateUserPwd(username, password))
+		document.forms["loginform"].submit();
+}
+
+function validateUserPwd(username, password)
+{
+	if (username == "" || username == undefined || username == null) 
+	{
+		alert("Please enter a valid username.");
+		return false;
+	}
+	if (password == "" || password == undefined || password == null) 
+	{
+		alert("Please enter a valid password.");
+		return false;
+	}
+	return true;
+}
+
+function addUser(username, password)
+{
+	if (window.console) console.log("addUser called, username: " + username + " password: " + password);
+	
+	alert("addUser called, username: " + username + " password: " + password);
+	
+	if (!validateUserPwd(username, password))
+		return;
+	var obj = new Object();
+	obj.username = username;
+	obj.password = password;
+	obj.command = "ADD_USER";
+	var url;
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+	
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:  		JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("msg: " + JSON.stringify(msg));
+			//alert("msg: " + JSON.stringify(msg));
+			//window.document.write(msg);
+			if (msg.error != "" && msg.error != undefined && msg.error != null)
+			{
+			alert("Error: " + msg.error);
+			return;
+			}
+			else {
+				alert("Successfully registered. Please log in with your credential.");
+			}
+			
+		}
+	});
+}
+
+// isPublish boolean set to true for publishing job, false for saving job 
+function post_asset(asset_id, asset_name, isPublish)
+{
+	var obj = new Object();
+	username = document.getElementById("username").innerHTML;
+	if (window.console) console.log(username);
+	obj.username = username;
+	obj.asset_id = asset_id;
+	obj.asset_name = asset_name;
+	obj.data = asset_obj;
+	obj.command = isPublish?"PUBLISH":"SAVE";
+	if (window.console) console.log("post_asset called : " + JSON.stringify(obj));
+	document.getElementById("AssetSummary").style.display = "none";
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:      JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("ajax succeeded for post_asset with response data: " + msg);
+			if (msg != null)
+				{
+				if (msg.error != "" && msg.error != undefined && msg.error != null)
+					{
+					alert("Error: " + msg.error);
+					return;
+					}
+				
+				if (isPublish)
+					{
+					alert("Asset metadata successfully published.");
+					refresh_asset_list();
+					init();
+					}
+				else {
+					show_saved_msg();
+					refresh_asset_list();
+					}
+				}
+		} // end of function(msg)
+	});
+}
+
+//isPublish boolean set to true for publishing job, false for saving job 
+function get_asset(asset_id, isPublish)
+{
+	var obj = new Object();
+	if (window.console) console.log("username: " + document.getElementById("username").innerHTML);
+	username = document.getElementById("username").innerHTML;
+	obj.username = username;
+	obj.asset_id = asset_id;
+	obj.command = isPublish?"GET_PUBLISHED_ASSET":"GET_SAVED_ASSET";
+	if (window.console) console.log("get_asset called : " + JSON.stringify(obj));
+	
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+	
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:      JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("ajax succeeded for get_asset with response data: " + JSON.stringify(msg.asset));
+			if (msg != null)
+				{
+				if (msg.error != "" && msg.error != undefined && msg.error != null)
+					{
+					alert("Error: " + msg.error);
+					return;
+					}
+				// display json as readly or not
+				
+				if (msg.access != null && msg.access != undefined )
+					{
+					if (window.console) console.log("111");
+					if (window.console) console.log(msg.access[0]);
+					if (window.console) console.log(msg.access[0].write);
+					setDataFromJSON(msg.asset, msg.access[0].write);
+					}
+				else if (!isPublish)
+					setDataFromJSON(msg.asset, true); // saved asset is always writable by owner
+				else
+					setDataFromJSON(msg.asset, false);
+				return msg.asset;
+				}
+					
+		} // end of function(msg)
+	});
+}
+
+var time_delta = 0;
+function adjusted_time()
+{
+	var time = new Date();	
+	//if (window.console) console.log("orig time: " + time.getTime() + " adjusted time: " + (time.getTime()+time_delta));
+	return (time.getTime()+time_delta).toString();
+}
+
+function show_saved_msg()
+{
+	var saved_info = document.getElementById("saved_info");
+	var time = new Date();
+	saved_info.innerHTML = "Saved at " + time;
+}
+
+function refresh_asset_list()
+{
+	if (window.console) console.log("refresh asset list called, for " + current_list);
+	var obj = new Object();
+	if (window.console) console.log("username: " + document.getElementById("username").innerHTML);
+	var c_list = current_list; // save it for refresh table because ajax is asynchronous call.
+	obj.command = "GET_"+ c_list;
+	obj.username = document.getElementById("username").innerHTML;
+	if (window.console) console.log("refresh_asset_list called : " + JSON.stringify(obj));
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:       JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("ajax succeeded for refresh_asset_list with response data: " + JSON.stringify(msg.list));
+			if (msg != null)
+				{
+				if (msg.error != "" && msg.error != undefined && msg.error != null)
+					{
+					alert("Error: " + msg.error);
+					return;
+					}
+				else
+					{
+					refresh_record_list_table(msg.list, c_list);
+					}
+				return msg.list;
+				}
+					
+		} // end of function(msg)
+	});
+}
+
+function delete_record(asset_id, isPublish)
+{
+	var obj = new Object();
+	if (window.console) console.log("username: " + document.getElementById("username").innerHTML);
+	obj.username = document.getElementById("username").innerHTML;
+	obj.asset_id = asset_id;
+	if (isPublish)
+		obj.command = "DELETE_ASSET";
+	else
+		obj.command = "DELETE_SAVED_ASSET";
+	if (window.console) console.log("post_asset called : " + JSON.stringify(obj));
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:      JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("ajax succeeded for get_asset with response data: " + JSON.stringify(msg.asset));
+			if (msg != null)
+				{
+				if (msg.error != "" && msg.error != undefined && msg.error != null)
+					{
+					alert("Error: " + msg.error);
+					return;
+					}
+				else 	refresh_asset_list();
+				}
+					
+		} // end of function(msg)
+	});
+}
+
+function submit_search(query) {
+	if (window.console) console.log("submit_search called for: " + query);
+	var obj = new Object();
+	//if (window.console) console.log("username: " + document.getElementById("username").innerHTML);
+	//obj.username = document.getElementById("username").innerHTML;
+	//obj.asset_id = asset_id;
+	obj.command = "INDEX_SEARCH";
+	obj.query = query;
+	//if (window.console) console.log("submit_search called : " + JSON.stringify(obj));
+	if (backend== "DB")
+		url = "/dataos-assetcatalog//DACUIDBServlet";
+	else
+		url = "/dataos-assetcatalog//DACUIServlet";
+
+	$.ajax({
+		type: 		"post",
+		url: 		url,
+		data:      JSON.stringify(obj),
+		success:	function(msg) {
+			if (window.console) console.log("ajax succeeded for submit_search with response data: " + msg.search_result);
+			if (msg != null)
+				{
+				if (msg.error != "" && msg.error != undefined && msg.error != null)
+					{
+					alert("Error: " + msg.error);
+					return;
+					}
+				else 	{
+					document.getElementById("result_content").innerHTML = formatJson(JSON.stringify(msg.search_result));
+					document.getElementById("search_result_panel").style.display = "block";
+					
+					if (window.console) console.log(msg.search_result);
+				}
+			}
+					
+		} // end of function(msg)
+	});
+}

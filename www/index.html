@@ -1,0 +1,163 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/console.css" />
+<script src="js/jquery-1.7.1.js"></script>
+<script src="js/util.js" > </script> 
+<!-- script src="http://code.jquery.com/jquery-latest.js"--></script>
+<title>OCAPI console</title>
+</head>
+<body><div id="main_panel">
+<div class="title">OCAPI Console</div>
+
+<form id="action_form" >
+    
+Host: <input id="host" name="host" value="http://ppritchard.inside-na01.dw.demandware.net/" onkeyup="updateURL()" size="60" />
+<p>
+Site: <input id="site" name="site" value="BackboneJS" onkeyup="updateURL()" />
+&nbsp;&nbsp;&nbsp;
+API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL()" size="12" />
+<p>
+    Client ID: <input id="client_id" name="client_id" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" onkeyup="updateURL()" size="50" />
+    <p>
+    Resource: <select id="resource" name="resource" onchange="updateURL()" >
+        <option>categories</option>
+        <option selected>products</option>
+        <option>product_search</option>
+        <option>content</option>
+        <option>content_search</option>
+        <option>folders</option>
+        <option>promotions</option>
+    </select> &nbsp;&nbsp;&nbsp;
+
+    Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" />
+    <p>
+
+    Expansions: <select multiple id="expand" name="expand" onchange="updateURL()" >
+        <option>images</option>
+        <option>availability</option>
+        <option>prices</option>
+        <option>variations</option>
+    </select>
+    <p>
+
+
+URI: <input id="request_uri" name="request_uri" size="100" />
+<br/>
+
+Operation: <br/>
+<select id="operation" name="operation">
+<option>GET</option>
+<option>PUT</option>
+<option>HEAD</option>
+<option>DELETE</option>
+</select>
+<br/>
+Data: 
+<input name="data" value="Put data to update here." />
+<br/><br/>
+<input type="submit" value="Send" style="width:150px; color:green"/>
+<br/><br/><br/>
+Response:
+ <div id="resp_data"><table class='result'><tr><th>Field</th><th>Value</th></tr></table></div>
+</form>
+
+<script>
+
+$("#action_form").submit(function(event)
+{
+    console.log("submit called");
+	/* stop form from submitting normally */
+	event.preventDefault();
+	
+	// get some values from elements on the page:
+	$("#resp_data").html("xxxxxxxx");	
+	// send the data using post and put the results in a div 
+                         //console.log("operation method %s" , $form.find( 'consumer_key').val()):
+                         $.get($('#request_uri').val(), function(result) {
+                               //console.log("!!!! successs!!!");
+                               /*var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
+                               for (var field in result)
+                               {
+                               
+                               if (field == "data")
+                               {
+                               var text_height = 1;
+                               if (result[field].length >50)
+                               text_height = 20;
+                               result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
+                               }
+                               else
+                               result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
+                               }
+                               result_html += "</table>"*/
+                               
+                               $("#resp_data").empty().append(createObjectTable(result));
+                               //$("#resp_data").empty().append(createObjectTable("!!!!"));
+                               }
+                               );
+    /*if (0)
+	$.post( url, $("#action_form").serialize(),
+			function (result){
+           console.log("post called");
+			var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
+			for (var field in result)
+				{
+				
+				if (field == "data")
+					{
+					var text_height = 1;
+					if (result[field].length >50)
+						text_height = 20;
+					result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
+					}
+				else
+					result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
+				}
+			result_html += "</table>"
+			
+			$("#resp_data").empty().append(result_html);
+           }
+	);*/
+     
+     
+});
+    
+
+    function createObjectTable(obj)
+    {
+        if (typeof obj === 'object')
+        {
+            var result_html = "<table class='result'>";
+            for (var field in obj)
+            {
+                if (field == "link" || field == "image") //&& obj[field].substr(obj[filed].length - 3) == "jpg")
+                {
+                    result_html += "<tr><td>" + field + "</td><td><img src=\"" + obj[field] + "\"></td></tr>";
+                    //alert(result_html);
+                }
+                else
+                    result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
+                //result_html += "<tr><td>" + field + "</td><td>" + obj[field] + "</td></tr>"
+            }
+            result_html += "</table>"
+        }
+        else
+            result_html = "" + obj;
+        return result_html;
+    }
+    
+    function updateURL()
+    {
+        var uri = $("#host").val() + "s/" + $("#site").val() + "/dw/shop/" + $("#version").val() + "/" +
+        $("#resource :selected").val() + "/" + $("#resource_id").val() + "?client_id=" + $("#client_id").val();
+        
+        if ($("#expand").val())
+        uri +=  "&expand=" + $("#expand").val();
+        $("#request_uri").val(uri);
+    }
+    updateURL();
+</script>
+
+</div>
+</body>
+</html>
