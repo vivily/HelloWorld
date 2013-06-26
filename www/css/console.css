@@ -44,4 +44,12 @@ form {
 	padding: 10px;
 }
 
+.round-bordered-small-text
+{
+border: solid 1px #AAAAAA;
+border-radius: 5px; 
+-moz-border-radius: 5px;
+padding: 5px;
+font-size: 12px;
+}
 

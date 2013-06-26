@@ -19,7 +19,7 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
 <p>
     Client ID: <input id="client_id" name="client_id" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" onkeyup="updateURL()" size="50" />
     <p>
-    Resource: <select id="resource" name="resource" onchange="updateURL()" >
+    Resource: <select id="resource" name="resource" onchange="updateByResource()" >
         <option>categories</option>
         <option selected>products</option>
         <option>product_search</option>
@@ -32,8 +32,8 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
     Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" />
     <p>
 
-    <div id="example_dv">sony-ps3-bundle, apple-ipod-touch, 
-    </div>
+    Examples: <span id="example_span" class="round-bordered-small-text">IDs: sony-ps3-bundle, apple-ipod-touch, 25592581
+    </span>
     <div id="expand_div">
     Expansions: <select multiple id="expand" name="expand" onchange="updateURL()" >
         <option>images</option>
@@ -79,22 +79,6 @@ $("#action_form").submit(function(event)
 	// send the data using post and put the results in a div 
                          //console.log("operation method %s" , $form.find( 'consumer_key').val()):
                          $.get($('#request_uri').val(), function(result) {
-                               //console.log("!!!! successs!!!");
-                               /*var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
-                               for (var field in result)
-                               {
-                               
-                               if (field == "data")
-                               {
-                               var text_height = 1;
-                               if (result[field].length >50)
-                               text_height = 20;
-                               result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
-                               }
-                               else
-                               result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
-                               }
-                               result_html += "</table>"*/
                                
                                $("#resp_data").empty().append(createObjectTable(result));
                                //$("#resp_data").empty().append(createObjectTable("!!!!"));
@@ -126,31 +110,6 @@ $("#action_form").submit(function(event)
      
      
 });
-    
-
-    /*function createObjectTable(obj)
-    {
-        if (typeof obj === 'object')
-        {
-            var result_html = "<table class='result'>";
-            for (var field in obj)
-            {
-             
-                    result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
-                //result_html += "<tr><td>" + field + "</td><td>" + obj[field] + "</td></tr>"
-            }
-            result_html += "</table>"
-        }
-        else if (typeof obj == 'string' && (endsWith(obj, "jpg") || (endsWith(obj, "png"))
-        {
-            result_html += "<tr><td>" + field + "</td><td><img src=\"" + obj[field] + "\"></td></tr>";
-        }
-        
-        else
-            result_html = "" + obj;
-        return result_html;
-    }*/
-    
     
     function createObjectTable(obj)
     {
@@ -188,6 +147,33 @@ $("#action_form").submit(function(event)
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     }
+    function updateByResource()
+        {
+            var example_string = "not defined";
+            var resource_id_string = "";
+            //alert($("#resource").val());
+            if ($("#resource").val() == "categories")
+            {
+                example_string = "IDs: root, womens, electronics, men";
+                resource_id_string = "womens";
+            }
+            else if ($("#resource").val() == "products")
+            {
+                example_string = "IDs: sony-ps3-bundle, apple-ipod-touch, 25592581";
+                resource_id_string = "apple-ipod-touch";
+            }
+            else if ($("#resource").val() == "content")
+            {
+                example_string = "IDs: about-us, Why-leathershoes";
+                resource_id_string = "about-us";
+            }
+            $("#example_span").html(example_string);
+            $("#resource_id").val(resource_id_string);
+            updateURL();
+        }
+    
+    
+    
 </script>
 
 </div>
