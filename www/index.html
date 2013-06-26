@@ -32,12 +32,17 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
     Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" />
     <p>
 
+    <div id="example_dv">sony-ps3-bundle, apple-ipod-touch, 
+    </div>
+    <div id="expand_div">
     Expansions: <select multiple id="expand" name="expand" onchange="updateURL()" >
         <option>images</option>
         <option>availability</option>
         <option>prices</option>
         <option>variations</option>
     </select>
+    </div>
+    
     <p>
 
 
@@ -123,6 +128,30 @@ $("#action_form").submit(function(event)
 });
     
 
+    /*function createObjectTable(obj)
+    {
+        if (typeof obj === 'object')
+        {
+            var result_html = "<table class='result'>";
+            for (var field in obj)
+            {
+             
+                    result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
+                //result_html += "<tr><td>" + field + "</td><td>" + obj[field] + "</td></tr>"
+            }
+            result_html += "</table>"
+        }
+        else if (typeof obj == 'string' && (endsWith(obj, "jpg") || (endsWith(obj, "png"))
+        {
+            result_html += "<tr><td>" + field + "</td><td><img src=\"" + obj[field] + "\"></td></tr>";
+        }
+        
+        else
+            result_html = "" + obj;
+        return result_html;
+    }*/
+    
+    
     function createObjectTable(obj)
     {
         if (typeof obj === 'object')
@@ -130,17 +159,16 @@ $("#action_form").submit(function(event)
             var result_html = "<table class='result'>";
             for (var field in obj)
             {
-                if (field == "link" || field == "image") //&& obj[field].substr(obj[filed].length - 3) == "jpg")
-                {
-                    result_html += "<tr><td>" + field + "</td><td><img src=\"" + obj[field] + "\"></td></tr>";
-                    //alert(result_html);
-                }
-                else
-                    result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
-                //result_html += "<tr><td>" + field + "</td><td>" + obj[field] + "</td></tr>"
+                result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
             }
             result_html += "</table>"
         }
+        else if (typeof obj == 'string' && ( endsWith(obj, "jpg") || endsWith(obj, "png") ))
+        {
+            result_html = "<img src=\"" + obj + "\">";
+            //result_html = "!!!!!!!!!!!!" + obj;
+        }
+        
         else
             result_html = "" + obj;
         return result_html;
@@ -156,6 +184,10 @@ $("#action_form").submit(function(event)
         $("#request_uri").val(uri);
     }
     updateURL();
+    
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
 </script>
 
 </div>
