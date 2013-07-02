@@ -46,10 +46,39 @@ form {
 
 .round-bordered-small-text
 {
-border: solid 1px #AAAAAA;
+border: solid 0px #AAAAAA;
 border-radius: 5px; 
 -moz-border-radius: 5px;
 padding: 5px;
 font-size: 12px;
 }
 
+.tab_btn_selected
+{
+border: solid 1px #A3CCA3;
+border-top-left-radius: 5px; 
+border-top-right-radius: 5px; 
+-moz-border-top-left-radius: 5px;
+-moz-border-top-right-radius: 5px;
+padding: 5px;
+font-size: 12px;
+background-color: A3CCA3;
+}
+
+.tab_btn_unselected
+{
+border: solid 1px #A3CCA3;
+border-top-left-radius: 5px; 
+border-top-right-radius: 5px; 
+-moz-border-top-left-radius: 5px;
+-moz-border-top-right-radius: 5px;
+padding: 5px;
+font-size: 12px;
+}
+
+
+
+#expand, #body_data
+{
+vertical-align: middle;
+}

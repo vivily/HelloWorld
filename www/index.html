@@ -2,7 +2,9 @@
 <head>
 <link rel="stylesheet" type="text/css" href="css/console.css" />
 <script src="js/jquery-1.7.1.js"></script>
-<script src="js/util.js" > </script> 
+<script src="js/util.js" > </script>
+<script src="js/console.js" > </script>
+    
 <!-- script src="http://code.jquery.com/jquery-latest.js"--></script>
 <title>OCAPI console</title>
 </head>
@@ -20,160 +22,129 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
     Client ID: <input id="client_id" name="client_id" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" onkeyup="updateURL()" size="50" />
     <p>
     Resource: <select id="resource" name="resource" onchange="updateByResource()" >
-        <option>categories</option>
-        <option selected>products</option>
-        <option>product_search</option>
-        <option>content</option>
-        <option>content_search</option>
-        <option>folders</option>
-        <option>promotions</option>
+        <option id="account_resource">account</option>
+        <option id="basket_resource">basket</option>
+        <option id="categories_resource">categories</option>
+        <option id="products_resource">products</option>
+        <option id="product_search_resource">product_search</option>
+        <option id="content_resource">content</option>
+        <option id="content_search_resource">content_search</option>
+        <option id="folders_resource">folders</option>
+        <option id="promotions_resource">promotions</option>
+    </select> &nbsp;&nbsp;&nbsp;
+    
+    API: <select id="OCAPI_method" name="ocapi_method" onchange="updateOCAPI()" >
     </select> &nbsp;&nbsp;&nbsp;
 
-    Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" />
-    <p>
+    HTTP: <span id="HTTP_method" class="round-bordered-small-text">GET</span>
+    <!--select id="operation" name="operation">
+        <option>GET</option>
+        <option>PUT</option>
+        <option>HEAD</option>
+        <option>DELETE</option>
+    </select-->
+<p>
+    <span id="resource_id_span"> Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    
 
     Examples: <span id="example_span" class="round-bordered-small-text">IDs: sony-ps3-bundle, apple-ipod-touch, 25592581
     </span>
-    <div id="expand_div">
+    </p>
+    <div class="vertical-middle">
+    <span id="expand_div">
     Expansions: <select multiple id="expand" name="expand" onchange="updateURL()" >
-        <option>images</option>
+        <option selected>images</option>
         <option>availability</option>
         <option>prices</option>
         <option>variations</option>
     </select>
+    </span>
+    <span id="body_data_div">
+    Data:
+    <textarea name="data" id="body_data" value="Put data to update here." cols=60 rows=4>put your POST or PATCH data here</textarea>
+        </span>
     </div>
-    
     <p>
 
 
-URI: <input id="request_uri" name="request_uri" size="100" />
+URI: <input id="request_uri" name="request_uri" size="120" />
 <br/>
 
-Operation: <br/>
-<select id="operation" name="operation">
-<option>GET</option>
-<option>PUT</option>
-<option>HEAD</option>
-<option>DELETE</option>
-</select>
-<br/>
-Data: 
-<input name="data" value="Put data to update here." />
+
 <br/><br/>
 <input type="submit" value="Send" style="width:150px; color:green"/>
 <br/><br/><br/>
 Response:
- <div id="resp_data"><table class='result'><tr><th>Field</th><th>Value</th></tr></table></div>
+    <span id="format_btn_table" class="tab_btn_selected" onclick="changeFormat('table')" > Table format</span>
+    <span id="format_btn_json"  class="tab_btn_unselected" onclick="changeFormat('json')" > JSON format </span>
+    <span id="format_btn_sitegen" class="tab_btn_unselected" onclick="changeFormat('sitegen')" > Sitegen format</span> <br/>
+    <div id="resp_data_table_format"></div>
+    <div id="resp_data_json_format"><textarea id="json_textarea" cols=90></textarea></div>
+    <div id="resp_data_sitegen_format">To be implemented.</div>
+    
 </form>
 
 <script>
+    $("#action_form").submit(function(event)
+                             {
+                             //alert("submit called");
+                             /* stop form from submitting normally */
+                             event.preventDefault();
+                             
+                             // send the data using post and put the results in a div
+                             //console.log("operation method %s" , $form.find( 'consumer_key').val()):
+                        if ($("#HTTP_method").html() == "GET")
+                             $.get($('#request_uri').val(), function(result) {
+                                   
+                                   $("#resp_data_table_format").empty().append(createObjectTable(result));
+                                   $("#json_textarea").html(formatJson(JSON.stringify(result)));
+                                   //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
+                                   var height = $("#json_textarea").prop('scrollHeight')/13;
+                                   //alert(height);
+                                   $("#json_textarea").attr('rows', height>50? 50:height);
+                                   $("#json_textarea").css('color', 'black');
+                                   //$("#resp_data_table_format").empty().append(createObjectTable("!!!!"));
+                                   }
+                                   ).fail(function(result)
+                                          {
+                                          $("#resp_data_table_format").empty().append(createObjectTable(result));
+                                          $("#json_textarea").html(formatJson(JSON.stringify(result)));
+                                          //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
+                                          var height = $("#json_textarea").prop('scrollHeight')/13;
+                                          //alert(height);
+                                          $("#json_textarea").attr('rows', height>50? 50:height);
+                                          $(".result").css('color', 'red');
+                                          $("#json_textarea").css('color', 'red');
+                                          }
+                            );
+                             /*if (0)
+                              $.post( url, $("#action_form").serialize(),
+                              function (result){
+                              console.log("post called");
+                              var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
+                              for (var field in result)
+                              {
+                              
+                              if (field == "data")
+                              {
+                              var text_height = 1;
+                              if (result[field].length >50)
+                              text_height = 20;
+                              result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
+                              }
+                              else
+                              result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
+                              }
+                              result_html += "</table>"
+                              
+                              $("#resp_data_table_format").empty().append(result_html);
+                              }
+                              );*/
+                             
+                             
+                             });
 
-$("#action_form").submit(function(event)
-{
-    console.log("submit called");
-	/* stop form from submitting normally */
-	event.preventDefault();
-	
-	// get some values from elements on the page:
-	$("#resp_data").html("xxxxxxxx");	
-	// send the data using post and put the results in a div 
-                         //console.log("operation method %s" , $form.find( 'consumer_key').val()):
-                         $.get($('#request_uri').val(), function(result) {
-                               
-                               $("#resp_data").empty().append(createObjectTable(result));
-                               //$("#resp_data").empty().append(createObjectTable("!!!!"));
-                               }
-                               );
-    /*if (0)
-	$.post( url, $("#action_form").serialize(),
-			function (result){
-           console.log("post called");
-			var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
-			for (var field in result)
-				{
-				
-				if (field == "data")
-					{
-					var text_height = 1;
-					if (result[field].length >50)
-						text_height = 20;
-					result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
-					}
-				else
-					result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
-				}
-			result_html += "</table>"
-			
-			$("#resp_data").empty().append(result_html);
-           }
-	);*/
-     
-     
-});
-    
-    function createObjectTable(obj)
-    {
-        if (typeof obj === 'object')
-        {
-            var result_html = "<table class='result'>";
-            for (var field in obj)
-            {
-                result_html += "<tr><td>" + field + "</td><td>" + createObjectTable(obj[field]) + "</td></tr>";
-            }
-            result_html += "</table>"
-        }
-        else if (typeof obj == 'string' && ( endsWith(obj, "jpg") || endsWith(obj, "png") ))
-        {
-            result_html = "<img src=\"" + obj + "\">";
-            //result_html = "!!!!!!!!!!!!" + obj;
-        }
-        
-        else
-            result_html = "" + obj;
-        return result_html;
-    }
-    
-    function updateURL()
-    {
-        var uri = $("#host").val() + "s/" + $("#site").val() + "/dw/shop/" + $("#version").val() + "/" +
-        $("#resource :selected").val() + "/" + $("#resource_id").val() + "?client_id=" + $("#client_id").val();
-        
-        if ($("#expand").val())
-        uri +=  "&expand=" + $("#expand").val();
-        $("#request_uri").val(uri);
-    }
-    updateURL();
-    
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-    function updateByResource()
-        {
-            var example_string = "not defined";
-            var resource_id_string = "";
-            //alert($("#resource").val());
-            if ($("#resource").val() == "categories")
-            {
-                example_string = "IDs: root, womens, electronics, men";
-                resource_id_string = "womens";
-            }
-            else if ($("#resource").val() == "products")
-            {
-                example_string = "IDs: sony-ps3-bundle, apple-ipod-touch, 25592581";
-                resource_id_string = "apple-ipod-touch";
-            }
-            else if ($("#resource").val() == "content")
-            {
-                example_string = "IDs: about-us, Why-leathershoes";
-                resource_id_string = "about-us";
-            }
-            $("#example_span").html(example_string);
-            $("#resource_id").val(resource_id_string);
-            updateURL();
-        }
-    
-    
-    
+    init();
 </script>
 
 </div>
