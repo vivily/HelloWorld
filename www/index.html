@@ -75,9 +75,7 @@ URI: <input id="request_uri" name="request_uri" size="120" />
 <input type="submit" value="Send" style="width:150px; color:green"/>
 <br/><br/><br/>
 Response:
-    <span id="format_btn_table" class="tab_btn_selected" onclick="changeFormat('table')" > Table format</span>
-    <span id="format_btn_json"  class="tab_btn_unselected" onclick="changeFormat('json')" > JSON format </span>
-    <span id="format_btn_sitegen" class="tab_btn_unselected" onclick="changeFormat('sitegen')" > Sitegen format</span> <br/>
+    <span id="format_btn_table" class="tab_btn_selected" onclick="changeFormat('table')" > Table format </span><span id="format_btn_json"  class="tab_btn_unselected" onclick="changeFormat('json')" > JSON format </span><span id="format_btn_sitegen" class="tab_btn_unselected" onclick="changeFormat('sitegen')" > Sitegen format</span> <br/>
     <div id="resp_data_table_format"></div>
     <div id="resp_data_json_format"><textarea id="json_textarea" cols=90></textarea></div>
     <div id="resp_data_sitegen_format">To be implemented.</div>
@@ -116,33 +114,58 @@ Response:
                                           $(".result").css('color', 'red');
                                           $("#json_textarea").css('color', 'red');
                                           }
-                            );
+                                          );
+                             
+                              if ($("#HTTP_method").html() == "POST")
+                             
+                            /* $.post($('#request_uri').val(),"xxx", function(result) {
+                                   
+                                   $("#resp_data_table_format").empty().append(createObjectTable(result));
+                                   $("#json_textarea").html(formatJson(JSON.stringify(result)));
+                                   //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
+                                   var height = $("#json_textarea").prop('scrollHeight')/13;
+                                   //alert(height);
+                                   $("#json_textarea").attr('rows', height>50? 50:height);
+                                   $("#json_textarea").css('color', 'black');
+                                   //$("#resp_data_table_format").empty().append(createObjectTable("!!!!"));
+                                   }
+                                   ).fail(function(result)
+                                          {
+                                          $("#resp_data_table_format").empty().append(createObjectTable(result));
+                                          $("#json_textarea").html(formatJson(JSON.stringify(result)));
+                                          //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
+                                          var height = $("#json_textarea").prop('scrollHeight')/13;
+                                          //alert(height);
+                                          $("#json_textarea").attr('rows', height>50? 50:height);
+                                          $(".result").css('color', 'red');
+                                          $("#json_textarea").css('color', 'red');
+                                          }
+                                          );*/
+                             
+                             $.ajax({
+                                    type:       "post",
+                                    url:        $('#request_uri').val(),
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('origin', "https://ppritchard.inside-na01.dw.demandware.net");
+                                    },
+
+                                    data:      $('#post_data').val(),
+                                    success:    function(msg) {
+                                    alert("post succeed!");
+                                    } // end of function(msg)
+                                    }).fail(function(e) {
+                                            alert("error " + JSON.stringify(e));
+                                            });
+
+                            
                              /*if (0)
                               $.post( url, $("#action_form").serialize(),
                               function (result){
                               console.log("post called");
-                              var result_html = "<table class='result'><tr><th>Field</th><th>Value</th></tr>";
-                              for (var field in result)
-                              {
-                              
-                              if (field == "data")
-                              {
-                              var text_height = 1;
-                              if (result[field].length >50)
-                              text_height = 20;
-                              result_html += "<tr><td>" + field + "</td><td><textarea disabled='disabled' cols=90 rows=" + text_height + ">" + formatJson(result[field]) + "</textarea></td></tr>";
-                              }
-                              else
-                              result_html += "<tr><td>" + field + "</td><td>" + result[field] + "</td></tr>";
-                              }
-                              result_html += "</table>"
-                              
-                              $("#resp_data_table_format").empty().append(result_html);
                               }
                               );*/
-                             
-                             
-                             });
+                             } // function(event)
+                             ); // submit
 
     init();
 </script>
