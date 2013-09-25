@@ -142,12 +142,13 @@ Response:
                                           }
                                           );*/
                              
+                             
                              $.ajax({
                                     type:       "post",
                                     url:        $('#request_uri').val(),
-                                    beforeSend: function (xhr) {
-                                        xhr.setRequestHeader('origin', "https://ppritchard.inside-na01.dw.demandware.net");
-                                    },
+                                   /* beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('origin', "https://secure.sitegenesis.com");
+                                    },*/
 
                                     data:      $('#post_data').val(),
                                     success:    function(msg) {
