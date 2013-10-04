@@ -4,7 +4,7 @@
 <script src="js/jquery-1.7.1.js"></script>
 <script src="js/util.js" > </script>
 <script src="js/console.js" > </script>
-    
+
 <!-- script src="http://code.jquery.com/jquery-latest.js"--></script>
 <title>OCAPI console</title>
 </head>
@@ -12,14 +12,17 @@
 <div class="title">OCAPI Console</div>
 
 <form id="action_form" >
-    
-Host: <input id="host" name="host" value="http://ppritchard.inside-na01.dw.demandware.net/" onkeyup="updateURL()" size="60" />
+<!-- some needed constant
+http://ppritchard.inside-na01.dw.demandware.net/
+BackboneJS
+-->
+Host: <input id="host" name="host" value="http://localhost/" onkeyup="updateURL()" size="60" />
 <p>
-Site: <input id="site" name="site" value="BackboneJS" onkeyup="updateURL()" />
+Site: <input id="site" name="site" value="Test_Chinese" onkeyup="updateURL()" />
 &nbsp;&nbsp;&nbsp;
 API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL()" size="12" />
 <p>
-    Client ID: <input id="client_id" name="client_id" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" onkeyup="updateURL()" size="50" />
+    Client ID: <input id="client_id" name="client_id" value="af7f5c90-ffc1-4ea4-9613-f5b375b7dc19" onkeyup="updateURL()" size="50" />
     <p>
     Resource: <select id="resource" name="resource" onchange="updateByResource()" >
         <option id="account_resource">account</option>
@@ -32,7 +35,7 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
         <option id="folders_resource">folders</option>
         <option id="promotions_resource">promotions</option>
     </select> &nbsp;&nbsp;&nbsp;
-    
+
     API: <select id="OCAPI_method" name="ocapi_method" onchange="updateOCAPI()" >
     </select> &nbsp;&nbsp;&nbsp;
 
@@ -45,7 +48,7 @@ API Version: <input id="version" name="version" value="v13_3" onkeyup="updateURL
     </select-->
 <p>
     <span id="resource_id_span"> Resource ID: <input id="resource_id" name="resource_id" value="apple-ipod-touch" onkeyup="updateURL()" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-    
+
 
     Examples: <span id="example_span" class="round-bordered-small-text">IDs: sony-ps3-bundle, apple-ipod-touch, 25592581
     </span>
@@ -79,7 +82,7 @@ Response:
     <div id="resp_data_table_format"></div>
     <div id="resp_data_json_format"><textarea id="json_textarea" cols=90></textarea></div>
     <div id="resp_data_sitegen_format">To be implemented.</div>
-    
+
 </form>
 
 <script>
@@ -88,12 +91,14 @@ Response:
                              //alert("submit called");
                              /* stop form from submitting normally */
                              event.preventDefault();
-                             
+
+                             alert($('#body_data').val());
+
                              // send the data using post and put the results in a div
                              //console.log("operation method %s" , $form.find( 'consumer_key').val()):
                         if ($("#HTTP_method").html() == "GET")
                              $.get($('#request_uri').val(), function(result) {
-                                   
+
                                    $("#resp_data_table_format").empty().append(createObjectTable(result));
                                    $("#json_textarea").html(formatJson(JSON.stringify(result)));
                                    //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
@@ -115,11 +120,11 @@ Response:
                                           $("#json_textarea").css('color', 'red');
                                           }
                                           );
-                             
+
                               if ($("#HTTP_method").html() == "POST")
-                             
+
                             /* $.post($('#request_uri').val(),"xxx", function(result) {
-                                   
+
                                    $("#resp_data_table_format").empty().append(createObjectTable(result));
                                    $("#json_textarea").html(formatJson(JSON.stringify(result)));
                                    //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
@@ -141,24 +146,31 @@ Response:
                                           $("#json_textarea").css('color', 'red');
                                           }
                                           );*/
-                             
-                             
+
+
                              $.ajax({
                                     type:       "post",
                                     url:        $('#request_uri').val(),
-                                   /* beforeSend: function (xhr) {
-                                        xhr.setRequestHeader('origin', "https://secure.sitegenesis.com");
-                                    },*/
-
-                                    data:      $('#post_data').val(),
-                                    success:    function(msg) {
-                                    alert("post succeed!");
+                                    charset: "utf-8",
+                                    contentType:"application/json; charset=utf-8",
+  									dataType:"json",
+                                    data:      $('#body_data').val(),
+                                    success:    function(result) {
+                                    alert("post succeed!" + result);
+                                    $("#resp_data_table_format").empty().append(createObjectTable(result));
+									                                   $("#json_textarea").html(formatJson(JSON.stringify(result)));
+									                                   //alert("scroll height: " + $("#json_textarea").prop('scrollHeight'));
+									                                   var height = $("#json_textarea").prop('scrollHeight')/13;
+									                                   //alert(height);
+									                                   $("#json_textarea").attr('rows', height>50? 50:height);
+									                                   $("#json_textarea").css('color', 'black');
+                                   //$("#resp_data_table_format").empty().append(createObjectTable("!!!!"));
                                     } // end of function(msg)
                                     }).fail(function(e) {
                                             alert("error " + JSON.stringify(e));
                                             });
 
-                            
+
                              /*if (0)
                               $.post( url, $("#action_form").serialize(),
                               function (result){
